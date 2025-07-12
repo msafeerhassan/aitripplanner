@@ -7,7 +7,7 @@ const newTripBtn = document.querySelector('.new-trip-btn');
 
 // API Configuration
 const GEMINI_API_CONFIG = {
-    apiKey: process.env.GEMINI_API_KEY || window.ENV?.GEMINI_API_KEY || 'YOUR_API_KEY_HERE', // Set via environment variable
+    apiKey: window.ENV?.GEMINI_API_KEY || 'YOUR_API_KEY_HERE', // Set via environment variable
     model: 'gemini-1.5-flash',
     endpoint: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
 };
