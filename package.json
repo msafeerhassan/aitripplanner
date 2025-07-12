@@ -1,0 +1,31 @@
+{
+  "name": "ai-trip-planner",
+  "version": "1.0.0",
+  "description": "AI-powered trip planning website using Gemini API",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "npx http-server -p 8000",
+    "deploy": "vercel",
+    "preview": "vercel --prod"
+  },
+  "keywords": [
+    "ai",
+    "travel",
+    "trip-planner",
+    "gemini-api",
+    "javascript",
+    "html",
+    "css"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/ai-trip-planner.git"
+  },
+  "homepage": "https://ai-trip-planner.vercel.app"
+}

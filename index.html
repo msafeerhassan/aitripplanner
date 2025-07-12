@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>AI Trip Planner</title>
+    <meta name="description" content="Plan your perfect trip with AI-powered recommendations, detailed itineraries, and comprehensive travel information">
+    <meta name="keywords" content="travel, trip planner, AI, vacation, itinerary, travel planning">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+</head>
+<body>
+    <!-- AI Planning Section -->
+    <section class="ai-planning">
+        <div class="container">
+            <div class="planning-interface">
+                <div class="app-header">
+                    <div class="logo">
+                        <i class="fas fa-plane"></i>
+                        <h1>AI Trip Planner</h1>
+                    </div>
+                    <p class="subtitle">Plan your perfect trip with artificial intelligence</p>
+                </div>
+                
+                <div class="chat-interface">
+                    <div class="chat-input-container">
+                        <textarea class="chat-input" placeholder="Describe your dream trip... (e.g., 'Romantic 5-day trip to Italy under $3000')" rows="2"></textarea>
+                        <button class="chat-send" aria-label="Send message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="quick-prompts">
+                        <button class="prompt-btn">Adventure trip to New Zealand</button>
+                        <button class="prompt-btn">Family vacation in Japan</button>
+                        <button class="prompt-btn">Solo backpacking in Europe</button>
+                        <button class="prompt-btn">Luxury weekend in Dubai</button>
+                        <button class="prompt-btn">Beach holiday in Maldives</button>
+                        <button class="prompt-btn">Cultural tour of India</button>
+                    </div>
+                </div>
+                
+                <!-- Trip Results Area -->
+                <div class="trip-results" id="tripResults" style="display: none;">
+                    <div class="results-header">
+                        <h3>Your AI-Generated Trip Plan</h3>
+                        <button class="new-trip-btn">
+                            <i class="fas fa-plus"></i>
+                            Plan Another Trip
+                        </button>
+                    </div>
+                    <div class="trip-content">
+                        <!-- Trip plan will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script src="script.js"></script>
+</body>
+</html>
