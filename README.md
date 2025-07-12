@@ -223,6 +223,17 @@ php -S localhost:8000
 ```
 
 ### 6. Deploy to Vercel
+
+#### Method 1: Via GitHub (Recommended)
+1. Push your code to a GitHub repository
+2. Go to [Vercel](https://vercel.com) and sign in with GitHub
+3. Import your repository
+4. Add environment variables:
+   - Go to your project Settings → Environment Variables
+   - Add `GEMINI_API_KEY` with your actual API key
+   - Deploy!
+
+#### Method 2: Via Vercel CLI
 1. Install Vercel CLI:
 ```bash
 npm i -g vercel
@@ -233,19 +244,37 @@ npm i -g vercel
 vercel
 ```
 
-3. Add environment variables in Vercel dashboard:
-   - Go to your project settings
-   - Add `GEMINI_API_KEY` as an environment variable
+3. Set environment variables:
+```bash
+vercel env add GEMINI_API_KEY
+# Enter your API key when prompted
+```
+
+4. Redeploy to apply the environment variables:
+```bash
+vercel --prod
+```
+
+#### Important: Environment Variables on Vercel
+- The project now uses a serverless API route (`/api/gemini.js`) to securely handle API calls
+- Your `GEMINI_API_KEY` must be set in Vercel's environment variables
+- Never commit your actual API key to the repository
 
 ## Project Structure
 
 ```
 aitripplanner/
+├── api/
+│   └── gemini.js       # Vercel serverless function for API calls
 ├── index.html          # Main HTML file
 ├── styles.css          # CSS styles
 ├── script.js           # JavaScript functionality
+├── config.js           # Configuration loader
+├── vercel.json         # Vercel deployment configuration
+├── package.json        # Project dependencies and scripts
 ├── README.md           # Project documentation
-└── .env               # Environment variables (create this)
+├── .env.example        # Environment variables template
+└── .env               # Environment variables (create this, not in git)
 ```
 
 ## Features Implementation Status

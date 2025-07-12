@@ -6,6 +6,7 @@
   "scripts": {
     "start": "python -m http.server 8000",
     "dev": "npx http-server -p 8000",
+    "build": "echo 'No build step required for static site'",
     "deploy": "vercel",
     "preview": "vercel --prod"
   },

@@ -5,13 +5,6 @@ const promptButtons = document.querySelectorAll('.prompt-btn');
 const tripResults = document.getElementById('tripResults');
 const newTripBtn = document.querySelector('.new-trip-btn');
 
-// API Configuration
-const GEMINI_API_CONFIG = {
-    apiKey: window.ENV?.GEMINI_API_KEY || 'YOUR_API_KEY_HERE', // Set via environment variable
-    model: 'gemini-1.5-flash',
-    endpoint: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
-};
-
 // Event Listeners
 chatSend.addEventListener('click', handleChatSubmit);
 chatInput.addEventListener('keypress', (e) => {
@@ -113,11 +106,8 @@ async function planTrip(userInput) {
     }
 }
 
-// Function to call Gemini API
+// Function to call Gemini API via our Vercel serverless function
 async function callGeminiAPI(prompt) {
-    if (!GEMINI_API_CONFIG.apiKey || GEMINI_API_CONFIG.apiKey === 'YOUR_API_KEY_HERE') {
-        throw new Error('Please set your Gemini API key in the GEMINI_API_KEY environment variable');
-    }
 
     const enhancedPrompt = `You are an expert AI travel planner with deep knowledge of global destinations, cultures, and travel logistics. Create a comprehensive, personalized trip itinerary based on this request: "${prompt}".
 
@@ -238,17 +228,18 @@ Make the response specific, detailed, and actionable. Consider the user's prefer
     };
 
     try {
-        const response = await fetch(`${GEMINI_API_CONFIG.endpoint}?key=${GEMINI_API_CONFIG.apiKey}`, {
+        // Use our Vercel serverless function instead of direct API call
+        const response = await fetch('/api/gemini', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(requestBody)
+            body: JSON.stringify({ prompt: enhancedPrompt })
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`API call failed: ${response.status} - ${errorText}`);
+            const errorData = await response.json();
+            throw new Error(`API call failed: ${response.status} - ${errorData.error || 'Unknown error'}`);
         }
 
         const data = await response.json();
