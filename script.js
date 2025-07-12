@@ -7,7 +7,7 @@ const newTripBtn = document.querySelector('.new-trip-btn');
 
 // API Configuration
 const GEMINI_API_CONFIG = {
-    apiKey: 'YOUR API KEY', // Replace with your actual API key
+    apiKey: process.env.GEMINI_API_KEY || window.ENV?.GEMINI_API_KEY || 'YOUR_API_KEY_HERE', // Set via environment variable
     model: 'gemini-1.5-flash',
     endpoint: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
 };
@@ -115,8 +115,8 @@ async function planTrip(userInput) {
 
 // Function to call Gemini API
 async function callGeminiAPI(prompt) {
-    if (!GEMINI_API_CONFIG.apiKey || GEMINI_API_CONFIG.apiKey.includes('example')) {
-        throw new Error('Please configure your Gemini API key in script.js');
+    if (!GEMINI_API_CONFIG.apiKey || GEMINI_API_CONFIG.apiKey === 'YOUR_API_KEY_HERE') {
+        throw new Error('Please set your Gemini API key in the GEMINI_API_KEY environment variable');
     }
 
     const enhancedPrompt = `You are an expert AI travel planner with deep knowledge of global destinations, cultures, and travel logistics. Create a comprehensive, personalized trip itinerary based on this request: "${prompt}".

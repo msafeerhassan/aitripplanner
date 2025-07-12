@@ -16,10 +16,31 @@ A modern, AI-powered trip planning web application built with the Google Gemini 
 
 1. **Clone or download** this repository
 2. **Get a Gemini API key** from [Google AI Studio](https://makersuite.google.com/app/apikey)
-3. **Replace the API key** in `script.js` (line 9):
-   ```javascript
-   apiKey: 'YOUR_ACTUAL_API_KEY_HERE'
-   ```
+3. **Set up your API key** using one of these methods:
+
+### Method 1: Environment Variable (Recommended)
+```bash
+# Create a .env file (copy from .env.example)
+cp .env.example .env
+
+# Edit .env and add your API key
+GEMINI_API_KEY=your_actual_gemini_api_key_here
+```
+
+### Method 2: Config File
+```javascript
+// Create a config.js file or edit the existing one
+window.ENV = {
+    GEMINI_API_KEY: 'your_actual_gemini_api_key_here'
+};
+```
+
+### Method 3: Direct Configuration
+```javascript
+// Edit config.js and uncomment the last line
+window.ENV.GEMINI_API_KEY = 'your_api_key_here';
+```
+
 4. **Open `index.html`** in your browser or serve via HTTP server
 
 ### Running Locally
