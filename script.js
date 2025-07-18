@@ -4,24 +4,18 @@ const promptButtons = document.querySelectorAll('.prompt-btn');
 const tripResults = document.getElementById('tripResults');
 const newTripBtn = document.querySelector('.new-trip-btn');
 
-let API_KEY = '';
+let API_KEY = 'AIzaSyD-tUTAR6OiBO16wpzPCeMYGd3KGS-vU40';
 
-async function loadEnvFile(){
-try{
-const response = await fetch('.env');
-const text = await response.text();
-const lines = text.split('\n');
-lines.forEach(line => {
-if(line.includes('GEMINI_API_KEY=')){
-API_KEY = line.split('=')[1].trim();
-}
-});
-}catch(error){
-console.log('couldnt load env file, using fallback');
-API_KEY = 'YOUR_API_KEY_HERE'; 
+function loadApiKey(){
+if(window.ENV && window.ENV.GEMINI_API_KEY && window.ENV.GEMINI_API_KEY !== 'your_api_key_here'){
+API_KEY = window.ENV.GEMINI_API_KEY;
+console.log('API key loaded from config');
+}else{
+console.log('using direct API key');
 }
 }
-loadEnvFile();
+
+loadApiKey();
 
 chatSend.addEventListener('click', handleChatSubmit);
 chatInput.addEventListener('keypress',(e)=>{
@@ -60,6 +54,7 @@ return;
 if(!validateTripRequest(message)){
 return;
 }
+
 setLoadingState(true);
 try{
 await planTrip(message);
@@ -221,6 +216,11 @@ topP:0.95,
 maxOutputTokens:8192,
 }
 };
+
+console.log('Using API key:', API_KEY ? 'Key loaded' : 'No key');
+if(!API_KEY || API_KEY === 'YOUR_API_KEY_HERE'){
+throw new Error('API key not properly loaded');
+}
 
 try{
 const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,{
