@@ -6,27 +6,18 @@
   "scripts": {
     "start": "python -m http.server 8000",
     "dev": "npx http-server -p 8000",
-    "build": "echo 'No build step required for static site'",
-    "deploy": "vercel",
-    "preview": "vercel --prod"
+    "build": "echo 'No build step required'",
+    "deploy": "firebase deploy"
   },
   "keywords": [
     "ai",
     "travel",
     "trip-planner",
-    "gemini-api",
-    "javascript",
-    "html",
-    "css"
+    "gemini-api"
   ],
-  "author": "Your Name",
+  "author": "",
   "license": "MIT",
   "devDependencies": {
     "http-server": "^14.1.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/ai-trip-planner.git"
-  },
-  "homepage": "https://ai-trip-planner.vercel.app"
+  }
 }

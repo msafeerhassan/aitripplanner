@@ -1,53 +1,176 @@
-# 🛫 AI Trip Planner
+# AI Trip Planner
 
-A modern, AI-powered trip planning web application built with the Google Gemini API. Plan your perfect trip with intelligent recommendations, detailed itineraries, and comprehensive travel information.
+An intelligent travel planning application powered by Google Gemini AI that creates personalized trip itineraries based on user preferences.
 
-## ✨ Features
+## Features
 
-- **Smart AI Planning**: Powered by Google Gemini API for intelligent trip recommendations
-- **Interactive Chat Interface**: Natural language trip planning with quick prompt buttons
-- **Comprehensive Trip Plans**: Detailed daily itineraries, budget breakdowns, and practical tips
-- **Modern UI**: Beautiful glassmorphism design with smooth animations and responsive layout
-- **Rich Information**: Accommodations, restaurants, transportation, weather, packing lists, and more
-- **Offline Fallback**: Enhanced mock responses when API is unavailable
-- **Local Storage**: Saves user preferences and trip history
+- **AI-Powered Planning**: Uses Google Gemini API for intelligent travel recommendations
+- **Interactive Interface**: Chat-based interface with quick prompt suggestions
+- **Comprehensive Itineraries**: Detailed daily plans with activities, costs, and practical tips
+- **Modern Design**: Responsive glassmorphism UI with smooth animations
+- **Rich Travel Information**: Accommodations, restaurants, transportation, weather, and packing lists
+- **Fallback Support**: Mock responses when API is unavailable
 
-## 🚀 Quick Start
+## Quick Setup
 
-1. **Clone or download** this repository
-2. **Get a Gemini API key** from [Google AI Studio](https://makersuite.google.com/app/apikey)
-3. **Set up your API key** using one of these methods:
+### Prerequisites
+- Google Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+- Modern web browser
+- Firebase CLI (for deployment)
 
-### Method 1: Environment Variable (Recommended)
+### Installation
+
+1. **Clone the repository**
 ```bash
-# Create a .env file (copy from .env.example)
-cp .env.example .env
+git clone <your-repository-url>
+cd ai-trip-planner
+```
 
-# Edit .env and add your API key
+2. **Configure API Key**
+   
+   Edit the `.env` file and replace the placeholder:
+```env
 GEMINI_API_KEY=your_actual_gemini_api_key_here
 ```
 
-### Method 2: Config File
-```javascript
-// Create a config.js file or edit the existing one
-window.ENV = {
-    GEMINI_API_KEY: 'your_actual_gemini_api_key_here'
-};
-```
-
-### Method 3: Direct Configuration
-```javascript
-// Edit config.js and uncomment the last line
-window.ENV.GEMINI_API_KEY = 'your_api_key_here';
-```
-
-4. **Open `index.html`** in your browser or serve via HTTP server
-
-### Running Locally
-
+3. **Run locally**
 ```bash
-# Using Python (recommended)
+# Using Python
 python -m http.server 8000
+
+# Using Node.js
+npx http-server -p 8000
+```
+
+4. **Access the application**
+   Open `http://localhost:8000` in your browser
+
+## Firebase Deployment
+
+### Setup Firebase
+
+1. **Install Firebase CLI**
+```bash
+npm install -g firebase-tools
+```
+
+2. **Login to Firebase**
+```bash
+firebase login
+```
+
+3. **Initialize Firebase project**
+```bash
+firebase init hosting
+```
+
+4. **Configure firebase.json**
+Create a `firebase.json` file:
+```json
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
+```
+
+5. **Deploy**
+```bash
+firebase deploy
+```
+
+### Important Notes for Firebase
+
+- The `.env` file is read directly by the client-side JavaScript
+- Ensure your `.env` file is included in your deployed files
+- For production, consider implementing server-side API key handling
+- The current implementation loads the API key client-side for simplicity
+
+## Project Structure
+
+```
+ai-trip-planner/
+├── index.html          # Main application file
+├── script.js           # JavaScript functionality
+├── styles.css          # Application styles
+├── config.js           # Configuration loader
+├── .env                # Environment variables
+├── .env.example        # Environment template
+├── package.json        # Project metadata
+├── firebase.json       # Firebase configuration
+└── README.md           # Documentation
+```
+
+## Usage
+
+1. **Enter Travel Preferences**: Describe your ideal trip in the chat interface
+2. **Use Quick Prompts**: Click suggested prompts for common travel types
+3. **Review Generated Plan**: AI creates comprehensive itinerary with all details
+4. **Save and Share**: Plans are automatically saved to local storage
+
+## API Integration
+
+The application integrates with Google Gemini API to generate intelligent travel plans. The API processes natural language requests and returns structured JSON responses containing:
+
+- Destination information
+- Daily itineraries
+- Budget breakdowns
+- Accommodation recommendations
+- Restaurant suggestions
+- Transportation options
+- Packing lists
+- Cultural tips
+
+## Customization
+
+### Styling
+Main colors and themes can be modified in `styles.css`. The application uses a glassmorphism design with:
+- Primary blue: `#2563eb`
+- Gradient backgrounds
+- Backdrop blur effects
+
+### Prompts
+Quick prompt buttons can be customized in the HTML file to match your target audience.
+
+## Browser Compatibility
+
+- Chrome 88+
+- Firefox 87+
+- Safari 14+
+- Edge 88+
+
+## Security Considerations
+
+- API keys are loaded client-side in current implementation
+- For production use, implement server-side proxy for API calls
+- Consider rate limiting and API key rotation
+- Validate all user inputs before API submission
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make changes and test thoroughly
+4. Submit a pull request
+
+## License
+
+MIT License - see LICENSE file for details
+
+## Support
+
+For issues and questions, please create an issue in the repository or contact the development team.
 
 # Using Node.js
 npx http-server -p 8000

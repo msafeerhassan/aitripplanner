@@ -1,115 +1,110 @@
-// Chat Interface Elements
 const chatInput = document.querySelector('.chat-input');
 const chatSend = document.querySelector('.chat-send');
 const promptButtons = document.querySelectorAll('.prompt-btn');
 const tripResults = document.getElementById('tripResults');
 const newTripBtn = document.querySelector('.new-trip-btn');
 
-// Event Listeners
+let API_KEY = '';
+
+async function loadEnvFile(){
+try{
+const response = await fetch('.env');
+const text = await response.text();
+const lines = text.split('\n');
+lines.forEach(line => {
+if(line.includes('GEMINI_API_KEY=')){
+API_KEY = line.split('=')[1].trim();
+}
+});
+}catch(error){
+console.log('couldnt load env file, using fallback');
+API_KEY = 'YOUR_API_KEY_HERE'; 
+}
+}
+loadEnvFile();
+
 chatSend.addEventListener('click', handleChatSubmit);
-chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        handleChatSubmit();
-    }
+chatInput.addEventListener('keypress',(e)=>{
+if(e.key === 'Enter' && !e.shiftKey){
+e.preventDefault();
+handleChatSubmit();
+}
 });
 
-// Auto-resize textarea
-chatInput.addEventListener('input', () => {
-    chatInput.style.height = 'auto';
-    chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+chatInput.addEventListener('input',()=>{
+chatInput.style.height='auto';
+chatInput.style.height=Math.min(chatInput.scrollHeight,120)+'px';
 });
 
-// Handle quick prompt buttons
-promptButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        chatInput.value = button.textContent;
-        handleChatSubmit();
-    });
+promptButtons.forEach(button=>{
+button.addEventListener('click',()=>{
+chatInput.value = button.textContent;
+handleChatSubmit();
+});
 });
 
-// Handle new trip button
-if (newTripBtn) {
-    newTripBtn.addEventListener('click', () => {
-        tripResults.style.display = 'none';
-        chatInput.value = '';
-        chatInput.focus();
-    });
+if(newTripBtn){
+newTripBtn.addEventListener('click',()=>{
+tripResults.style.display='none';
+chatInput.value='';
+chatInput.focus();
+});
 }
 
-// Main chat submission handler
-async function handleChatSubmit() {
-    const message = chatInput.value.trim();
-    if (!message) {
-        showNotification('Please enter your trip preferences.', 'warning');
-        return;
-    }
-
-    if (!validateTripRequest(message)) {
-        return;
-    }
-
-    // Show loading state
-    setLoadingState(true);
-    
-    try {
-        await planTrip(message);
-        chatInput.value = '';
-    } catch (error) {
-        console.error('Error in chat submission:', error);
-        showNotification('Sorry, there was an error. Please try again.', 'error');
-    } finally {
-        setLoadingState(false);
-    }
+async function handleChatSubmit(){
+const message = chatInput.value.trim();
+if(!message){
+showNotification('Please enter your trip preferences.','warning');
+return;
+}
+if(!validateTripRequest(message)){
+return;
+}
+setLoadingState(true);
+try{
+await planTrip(message);
+chatInput.value='';
+}catch(error){
+console.error('Error in chat submission:', error);
+showNotification('Sorry, there was an error. Please try again.','error');
+}finally{
+setLoadingState(false);
+}
 }
 
-// Set loading state
-function setLoadingState(isLoading) {
-    chatInput.disabled = isLoading;
-    chatSend.disabled = isLoading;
-    
-    if (isLoading) {
-        chatSend.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        chatInput.placeholder = 'AI is planning your trip...';
-    } else {
-        chatSend.innerHTML = '<i class="fas fa-paper-plane"></i>';
-        chatInput.placeholder = 'Describe your dream trip...';
-    }
+function setLoadingState(isLoading){
+chatInput.disabled=isLoading;
+chatSend.disabled=isLoading;
+if(isLoading){
+chatSend.innerHTML='<i class="fas fa-spinner fa-spin"></i>';
+chatInput.placeholder='AI is planning your trip...';
+}else{
+chatSend.innerHTML='<i class="fas fa-paper-plane"></i>';
+chatInput.placeholder='Describe your dream trip...';
+}
 }
 
-// Trip planning function with Gemini API
-async function planTrip(userInput) {
-    console.log('Planning trip with input:', userInput);
-    
-    try {
-        showNotification('AI is working on your itinerary...', 'info');
-        
-        // Call actual Gemini API
-        const response = await callGeminiAPI(userInput);
-        
-        // Parse and display the response
-        const tripPlan = parseGeminiResponse(response);
-        displayTripPlan(tripPlan);
-        showNotification('Trip plan generated successfully! 🎉', 'success');
-        
-        // Save to preferences
-        saveUserPreferences({ lastSearch: userInput, timestamp: Date.now() });
-        
-    } catch (error) {
-        console.error('Error planning trip:', error);
-        
-        // Fallback to mock response if API fails
-        console.log('API failed, using enhanced fallback response');
-        const mockResponse = generateEnhancedMockResponse(userInput);
-        displayTripPlan(mockResponse);
-        showNotification('Generated sample trip plan (API unavailable)', 'warning');
-    }
+async function planTrip(userInput){
+console.log('Planning trip with input:', userInput);
+try{
+showNotification('AI is working on your itinerary...','info');
+const response = await callGeminiAPI(userInput);
+const tripPlan = parseGeminiResponse(response);
+displayTripPlan(tripPlan);
+showNotification('Trip plan generated successfully! 🎉','success');
+saveUserPreferences({lastSearch: userInput, timestamp: Date.now()});
+}catch(error){
+console.error('Error planning trip:', error);
+console.log('API failed, using enhanced fallback response');
+const mockResponse = generateEnhancedMockResponse(userInput);
+displayTripPlan(mockResponse);
+showNotification('Generated sample trip plan (API unavailable)','warning');
+}
 }
 
-// Function to call Gemini API via our Vercel serverless function
-async function callGeminiAPI(prompt) {
+async function callGeminiAPI(prompt){
 
-    const enhancedPrompt = `You are an expert AI travel planner with deep knowledge of global destinations, cultures, and travel logistics. Create a comprehensive, personalized trip itinerary based on this request: "${prompt}".
+const enhancedPrompt = `You are an expert AI travel planner with deep knowledge of global destinations, cultures, and travel logistics. Create a comprehensive, personalized trip itinerary based on this request: "${prompt}".
 
 IMPORTANT: Respond ONLY with a valid JSON object (no markdown, no backticks, no additional text) in this exact format:
 
@@ -213,80 +208,75 @@ IMPORTANT: Respond ONLY with a valid JSON object (no markdown, no backticks, no 
 
 Make the response specific, detailed, and actionable. Consider the user's preferences, budget hints, and travel style from their request.`;
 
-    const requestBody = {
-        contents: [{
-            parts: [{
-                text: enhancedPrompt
-            }]
-        }],
-        generationConfig: {
-            temperature: 0.7,
-            topK: 40,
-            topP: 0.95,
-            maxOutputTokens: 8192,
-        }
-    };
+const reqBody={
+contents:[{
+parts:[{
+text:enhancedPrompt
+}]
+}],
+generationConfig:{
+temperature:0.7,
+topK:40,
+topP:0.95,
+maxOutputTokens:8192,
+}
+};
 
-    try {
-        // Use our Vercel serverless function instead of direct API call
-        const response = await fetch('/api/gemini', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ prompt: enhancedPrompt })
-        });
+try{
+const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,{
+method:'POST',
+headers:{
+'Content-Type':'application/json',
+},
+body:JSON.stringify(reqBody)
+});
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`API call failed: ${response.status} - ${errorData.error || 'Unknown error'}`);
-        }
-
-        const data = await response.json();
-        const responseText = data.candidates[0].content.parts[0].text.trim();
-        
-        // Clean the response (remove markdown formatting if present)
-        const cleanedResponse = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-        
-        try {
-            return JSON.parse(cleanedResponse);
-        } catch (parseError) {
-            console.warn('Response is not valid JSON:', parseError);
-            console.log('Raw response:', responseText);
-            throw new Error('API returned invalid JSON format');
-        }
-        
-    } catch (error) {
-        console.error('Gemini API error:', error);
-        throw error;
-    }
+if(!resp.ok){
+const errorData = await resp.json();
+throw new Error(`API call failed: ${resp.status} - ${errorData.error || 'Unknown error'}`);
 }
 
-// Parse Gemini response
-function parseGeminiResponse(response) {
-    return {
-        type: 'json',
-        content: response
-    };
+const data=await resp.json();
+const responseText=data.candidates[0].content.parts[0].text.trim();
+
+const cleanedResponse=responseText.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
+
+try{
+return JSON.parse(cleanedResponse);
+}catch(parseError){
+console.warn('Response is not valid JSON:',parseError);
+console.log('Raw response:',responseText);
+throw new Error('API returned invalid JSON format');
+}
+}catch(error){
+console.error('Gemini API error:',error);
+throw error;
+}
 }
 
-// Enhanced mock response for fallback
-function generateEnhancedMockResponse(userInput) {
-    const destinations = ['Paris', 'Tokyo', 'New York', 'London', 'Barcelona', 'Dubai'];
-    const randomDestination = destinations[Math.floor(Math.random() * destinations.length)];
-    
-    return {
-        type: 'json',
-        content: {
-            destination: randomDestination,
-            duration: "5 days",
-            overview: `An amazing ${randomDestination} adventure tailored to your request: "${userInput}". Experience the perfect blend of culture, cuisine, and unforgettable moments.`,
-            highlights: ["Iconic landmarks and attractions", "Authentic local cuisine experiences", "Cultural immersion opportunities"],
-            itinerary: [
-                {
-                    day: 1,
-                    title: "Arrival & First Impressions",
-                    theme: "Getting Oriented",
+function parseGeminiResponse(response){
+return{
+type:'json',
+content:response
+};
+}
+
+function generateEnhancedMockResponse(userInput){
+const destinations=['Paris','Tokyo','New York','London','Barcelona','Dubai'];
+const randomDestination=destinations[Math.floor(Math.random()*destinations.length)];
+
+return{
+type:'json',
+content:{
+destination:randomDestination,
+duration:"5 days",
+overview:`An amazing ${randomDestination} adventure tailored to your request: "${userInput}". Experience the perfect blend of culture, cuisine, and unforgettable moments.`,
+highlights:["Iconic landmarks and attractions","Authentic local cuisine experiences","Cultural immersion opportunities"],
+itinerary:[
+{
+day:1,
+title:"Arrival & First Impressions",
+theme:"Getting Oriented",
                     activities: [
                         {
                             time: "Morning",
