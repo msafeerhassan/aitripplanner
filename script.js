@@ -4,7 +4,7 @@ const promptButtons = document.querySelectorAll('.prompt-btn');
 const tripResults = document.getElementById('tripResults');
 const newTripBtn = document.querySelector('.new-trip-btn');
 
-let API_KEY = 'AIzaSyD-tUTAR6OiBO16wpzPCeMYGd3KGS-vU40';
+let API_KEY = 'yourapikey';
 
 function loadApiKey(){
 if(window.ENV && window.ENV.GEMINI_API_KEY && window.ENV.GEMINI_API_KEY !== 'your_api_key_here'){
